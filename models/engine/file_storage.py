@@ -55,7 +55,7 @@ class FileStorage:
                 jo = json.load(f)
             for key in jo:
                 self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
-        except:
+        except Exception:
             pass
 
     def delete(self, obj=None):
@@ -69,27 +69,32 @@ class FileStorage:
         """call reload() method for deserializing the JSON file to objects"""
         self.reload()
 
-
     def get(self, cls, id):
-        """Returns the object based on the class and its ID,
-        or None if not found"""
-
+        """
+        Return the object based on the class and its ID, or None if not found
+        """
+        # save the objects' class passed as argument using all() method
         objects = self.all(cls)
 
         if cls is None or id is None:
             return None
         else:
-            for key, value in object.items():
-                if object[key].id == id:
+            for key, value in objects.items():
+                # if ids match return value which is the
+                # string representation of the object
+                if objects[key].id == id:
                     return value
+            # return None if ids don't match
             return None
 
     def count(self, cls=None):
-        """Returns the number of objects in storage
-        matching the given class. If no class is passed,
-        returns the count of all objects in storage"""
-
+        """
+        Return the number of objects in storage matching the given class.
+        If no class is passed, return the count of all objects in storage
+        """
+        # save all objects
         objects = self.all()
+        # variable to count objects
         count = 0
 
         if cls is None:
@@ -97,6 +102,7 @@ class FileStorage:
                 count += 1
             return count
         else:
-            # Si no es None es porque se paso una clase
-            # y llamamos al metodo all
+            # if cls is not None thats because a class was passed as argument
+            # so we use all() method and len function to get
+            # the number of objects
             return len(self.all(cls))
