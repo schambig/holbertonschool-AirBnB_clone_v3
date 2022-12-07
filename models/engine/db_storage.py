@@ -84,8 +84,8 @@ class DBStorage:
         if cls is None or id is None:
             return None
         else:
-            for key, value in object.items():
-                if object[key].id == id:
+            for key, value in objects.items():
+                if objects[key].id == id:
                     return value
             return None
 
