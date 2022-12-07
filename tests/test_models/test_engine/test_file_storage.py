@@ -113,3 +113,41 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    def test_db_storage_get(self):
+        '''
+            Check if instance gotten for DBStorage
+        '''
+        new_o = State(name="Drix")
+        obj = storage.get("new_o", "none_id")
+        self.assertIsNone(obj)
+
+    def test_db_storage_count(self):
+        '''
+            Check total count of objs in DBStorage
+        '''
+        storage.reload()
+        all_count = storage.count(None)
+        self.assertIsInstance(all_count, int)
+        cls_count = storage.count("State")
+        self.assertIsInstance(cls_count, int)
+        self.assertGreaterEqual(all_count, cls_count)
+
+    def test_get_fileStorage(self):
+        ''' más testeos de la función get'''
+        storage = FileStorage()
+        dic = {}
+        new_obj = classes['Place']()
+        dic[new_obj.__class__.__name__ + "." + new_obj.id] = new_obj
+        FileStorage._FileStorage__objects = new_dict
+        self.assertTrue(storage.get(None, None) is None)
+        self.assertTrue(storage.get('User', None) is None)
+
+    def test_count_fileStorage(self):
+        ''' Check total count of objs in FileStorage'''
+        storage = FileStorage()
+        dic = {}
+        new_obj = classes['State']()
+        dic[new_obj.__class__.__name__ + "." + dic.id] = dic
+        FileStorage._FileStorage__objects = new_dict
+        self.assertTrue(storage.count('State') > 0)
