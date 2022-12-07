@@ -134,7 +134,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertGreaterEqual(all_count, cls_count)
 
     def test_get_fileStorage(self):
-        ''' más testeos de la función get'''
+        ''' more testeos de la función get'''
         storage = FileStorage()
         dic = {}
         new_obj = classes['Place']()
