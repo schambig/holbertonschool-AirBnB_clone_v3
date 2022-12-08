@@ -3,9 +3,9 @@
 from flask import Flask
 from models import storage
 from api.v1.views import app_views
-from os import getenv  # to use environmental variable
-from flask import make_response, jsonify
-from werkzeug.exceptions import HTTPException
+from os import getenv  # to use environmental variables
+from flask import jsonify
+from werkzeug.exceptions import HTTPException  # to use errorhandler
 
 
 # instance app variable from Flask class
@@ -21,9 +21,9 @@ def teardown(self):
 
 
 @app.errorhandler(HTTPException)
-def handle_exception(e):
+def handle_exception(error):
     ''' Use errorhandler to display 404 error page '''
-    return jsonify({"error" : "Not found"}), 404
+    return jsonify({"error": "Not found"}), 404
 
 
 if __name__ == '__main__':
