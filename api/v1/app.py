@@ -3,7 +3,8 @@
 from flask import Flask
 from models import storage
 from api.v1.views import app_views
-from os import getenv  # to use environmental variables
+from os import getenv  # to use environmental variable
+from flask import make_response, jsonify
 
 
 # instance app variable from Flask class
@@ -16,6 +17,12 @@ app.register_blueprint(app_views)
 def teardown(self):
     ''' Remove the current SQLAlchemy Session '''
     storage.close()
+
+
+@app.errorhandler(404)
+def not_found(self):
+    ''' Use errorhandler to display 404 error page '''
+    return jsonify({'error': 'Not found'})
 
 
 if __name__ == '__main__':
