@@ -5,7 +5,7 @@ Create a new view for State objects that handles all default HTTP methods
 from models.state import State
 from models import storage
 from api.v1.views import app_views
-from flask import jsonify, abort
+from flask import jsonify, abort, make_response
 
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
@@ -31,3 +31,18 @@ def return_states_id(state_id):
             return value.to_dict()
     # raise error 404 if id is not liked to State object
     abort(404)
+
+
+@app_views.route('/states/<state_id>', methods=['DELETE'],
+                 strict_slashes=False)
+def delete_states_id(state_id):
+    ''' Delete a State object using a specific id'''
+    # save the object with the specific id from database
+    state = storage.get(State, state_id)
+    if state is None:
+        abort(404)
+    else:
+        storage.delete(state)
+        storage.save()
+        # return and empty dictionary with the status code 200
+        return make_response(jsonify({}), 200)
