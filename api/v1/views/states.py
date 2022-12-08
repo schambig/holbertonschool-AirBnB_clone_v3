@@ -5,7 +5,7 @@ Create a new view for State objects that handles all default HTTP methods
 from models.state import State
 from models import storage
 from api.v1.views import app_views
-from flask import jsonify
+from flask import jsonify, abort
 
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
@@ -24,7 +24,7 @@ def return_states_id(state_id):
     ''' Retrieve a State object using a specific id '''
     # save all the objects in State class from database
     states = storage.all(State)
-    for key, values in states.items():
+    for key, value in states.items():
         # check if id passed is linked to State object
         # if so, return the State object
         if states[key].id == state_id:
