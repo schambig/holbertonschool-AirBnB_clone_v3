@@ -13,7 +13,7 @@ from flask import jsonify, abort, request
 def return_users():
     ''' Retrieves the list of all User objects, use GET http method '''
     # save all the objects in State class from database
-    users = storage.all(State)
+    users = storage.all(User)
     users_list = []
     for key, value in users.items():
         users_list.append(value.to_dict())
@@ -24,7 +24,7 @@ def return_users():
 def return_users_id(user_id):
     ''' Retrieve a User object using a specific id, use GET http method '''
     # save all the objects in State class from database
-    users = storage.all(State)
+    users = storage.all(User)
     for key, value in users.items():
         # check if id passed is linked to User object
         # if so, return the User object
@@ -39,7 +39,7 @@ def return_users_id(user_id):
 def delete_users_id(user_id):
     ''' Delete a State object using a specific id, use DELETE http method '''
     # save the object with the specific id from database
-    user = storage.get(State, user_id)
+    user = storage.get(User, user_id)
     if user is None:
         abort(404)
     else:
@@ -57,10 +57,12 @@ def post_user():
     if body is None:
         return (jsonify({'error': 'Not a JSON'}), 400)
     # create a new instance of User and pass body dict as **kwargs
-    obj = State(**body)
+    obj = User(**body)
 
-    if 'name' not in body:
-        return (jsonify({'error': 'Mising name'}), 400)
+    if 'email' not in body:
+        return (jsonify({'Missing email'}), 400)
+    if 'password' not in body:
+        return (jsonify({'Missing password'}), 400)
     else:
         storage.new(obj)
         storage.save()
@@ -73,11 +75,11 @@ def update_users_id(user_id):
     body = request.get_json()
     if body is None:
         return (jsonify({'error': 'Not a JSON'}), 400)
-    user = storage.get(State, user_id)
+    user = storage.get(User, user_id)
     if user is None:
         abort(404)
     else:
-        ignore_key = ['id', 'created_at', 'updated_at']
+        ignore_key = ['id', 'email', 'created_at', 'updated_at']
         for key, value in body.items():
             if key not in ignore_key:
                 setattr(user, key, value)
