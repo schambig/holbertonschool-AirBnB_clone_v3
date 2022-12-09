@@ -42,7 +42,7 @@ def return_cities_id(city_id):
 
 @app_views.route('/cities/<city_id>', methods=['DELETE'],
                  strict_slashes=False)
-def delete_states_id(city_id):
+def delete_cities_id(city_id):
     ''' Delete a city object using a specific id'''
     # save the object with the specific id from database
     city = storage.get(City, city_id)
@@ -70,7 +70,7 @@ def post_city(state_id):
         abort(404)
 
     if 'name' not in body:
-        return (jsonify({'error': 'Mising name'}), 400)
+        return (jsonify({'error': 'Missing name'}), 400)
 
     body['state_id'] = state_id
     obj = City(**body)
@@ -81,7 +81,7 @@ def post_city(state_id):
     return (jsonify(obj.to_dict()), 201)
 
 
-@app_views.route('/cities/<cities_id>', methods=['PUT'],
+@app_views.route('/cities/<city_id>', methods=['PUT'],
                  strict_slashes=False)
 def update_cities_id(city_id):
     ''' Update a State object '''
