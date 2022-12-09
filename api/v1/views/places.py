@@ -90,3 +90,25 @@ def post_place(city_id):
     storage.save()
     # return the new Place with the status code 201
     return (jsonify(obj.to_dict()), 201)
+
+
+@app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
+def update_place_id(place_id):
+    ''' Update a Place object using its id, use PUT http method '''
+    # transform the HTTP body request to a python dictionary
+    body = request.get_json()
+    if body is None:
+        return (jsonify({'error': 'Not a JSON'}), 400)
+    # retrieve the object based on the class and its ID, or None if not found
+    place = storage.get(Place, place_id)
+    if place is None:
+        abort(404)
+    else:
+        ignore_key = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
+        for key, value in body.items():
+            if key not in ignore_key:
+                setattr(place, key, value)
+            else:
+                pass
+        storage.save()
+        return (jsonify(place.to_dict()), 200)
