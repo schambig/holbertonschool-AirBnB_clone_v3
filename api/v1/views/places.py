@@ -17,7 +17,7 @@ def return_places(city_id):
     '''
     Retrieves the list of all Place objects of a City, use GET http method
     '''
-    # Return the object based on the class and its ID, or None if not found
+    # retrieve the object based on the class and its ID, or None if not found
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
@@ -26,3 +26,13 @@ def return_places(city_id):
     for place in city.places:
         places.append(place.to_dict())
     return jsonify(places)
+
+
+@app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
+def return_place_id(place_id):
+    ''' Retrieve a Place object using its id, use GET http method '''
+    # retrieve the object based on the class and its ID, or None if not found
+    place = storage.get(Place, place_id)
+    if place is None:
+        abort(404)
+    return jsonify(place.to_dict())
