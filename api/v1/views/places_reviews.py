@@ -52,3 +52,42 @@ def delete_review_id(review_id):
         storage.save()
         # return an empty dictionary with the status code 200
         return (jsonify({}), 200)
+
+
+@app_views.route('/places/<place_id>/reviews', methods=['POST'],
+                 strict_slashes=False)
+def post_review(place_id):
+    ''' Create a Review object, use POST http method '''
+    # transform the HTTP body request to a python dictionary
+    body = request.get_json()
+    if body is None:
+        return (jsonify({'error': 'Not a JSON'}), 400)
+    # retrieve the object based on the class and its ID, or None if not found
+    place = storage.get(Place, place_id)
+    if place is None:
+        abort(404)
+    # if the body dictionary doesn’t contain the key user_id,
+    # raise a 400 error with a message
+    if 'user_id' not in body:
+        return (jsonify({'error': 'Missing user_id'}), 400)
+    # use the python method get to obtain the user_id from body dictionary
+    user_id = body.get('user_id')
+    # use our custom method get to
+    # retrieve the object based on the class and its ID, or None if not found
+    user = storage.get(User, user_id)
+    if user is None:
+        abort(404)
+    # If the body dictionary doesn’t contain the key name,
+    # raise a 400 error with a message
+    if 'text' not in body:
+        return (jsonify({'error': 'Missing text'}), 400)
+
+    # save the place_id and user_id in the body dictionary
+    body['place_id'] = place_id
+    body['user_id'] = user_id
+    # create a new instance of Review and pass body dictionary as **kwargs
+    obj = Review(**body)
+    storage.new(obj)
+    storage.save()
+    # return the new Review with the status code 201
+    return (jsonify(obj.to_dict()), 201)
