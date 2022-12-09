@@ -10,12 +10,12 @@ from flask import jsonify, abort, request
 # from flask import make_response
 
 
-@app_views.route('/states/<state_id>/cities', methods=['GET'], strict_slashes=False)
+@app_views.route('/states/<state_id>/cities', methods=['GET'],
+                 strict_slashes=False)
 def return_cities(state_id):
     ''' Retrieves the list of all State objects, use GET method '''
     # save all the objects in State class from database
     states = storage.get(State, state_id)
-    
     # If the state_id is not linked to any State object, raise a 404 error
     if states is None:
         abort(404)
@@ -38,6 +38,7 @@ def return_cities_id(city_id):
     if cities is None:
         abort(404)
     return jsonify(cities.to_dict())
+
 
 @app_views.route('/cities/<city_id>', methods=['DELETE'],
                  strict_slashes=False)
