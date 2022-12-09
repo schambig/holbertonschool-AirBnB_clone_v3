@@ -55,13 +55,33 @@ def post_state():
     # transform the HTTP body request to a python dictionary
     body = request.get_json()
     if body is None:
-        return (jsonify('error': 'Not a JSON'), 400)
+        return (jsonify({'error': 'Not a JSON'}), 400)
     # create a new instance of State and pass body dict as **kwargs
     obj = State(**body)
 
     if 'name' not in body:
-        return (jsonify('error': 'Mising name'), 400)
+        return (jsonify({'error': 'Mising name'}), 400)
     else:
         storage.new(obj)
         storage.save()
         return (jsonify(obj.to_dict()), 201)
+
+
+@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
+def update_states_id(state_id):
+    ''' Update a State object '''
+    body = request.get_json()
+    if body is None:
+        return (jsonify({'error': 'Not a JSON'}), 400)
+    state = storage.get(State, state_id)
+    if state is None:
+        abort(404)
+    else:
+        ignore_key = ['id', 'created_at', 'updated_at']
+        for key, value in body.items():
+            if key not in ignore_key:
+                setattr(state, key, value)
+            else:
+                pass
+        storage.save()
+        return (jsonify(state.to_dict()), 200)
