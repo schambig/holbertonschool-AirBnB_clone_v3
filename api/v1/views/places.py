@@ -39,7 +39,7 @@ def return_place_id(place_id):
 
 
 @app_views.route('/places/<place_id>', methods=['DELETE'],
-                strict_slashes=False)
+                 strict_slashes=False)
 def delete_place_id(place_id):
     ''' Delete a Place object using its id, ise DELETE http method '''
     # retrieve the object based on the class and its ID, or None if not found
@@ -51,3 +51,42 @@ def delete_place_id(place_id):
         storage.save()
         # return an empty dictionary with the status code 200
         return (jsonify({}), 200)
+
+
+@app_views.route('/cities/<city_id/places>', methods=['POST'],
+                 strict_slashes=False)
+def post_place(city_id):
+    ''' Create a Place object, use POST http method '''
+    # transform the HTTP body request to a python dictionary
+    body = request.get_json()
+    if body is None:
+        return (jsonify({'error': 'Not a JSON'}), 400)
+    # retrieve the object based on the class and its ID, or None if not found
+    city = storage.get(City, city_id)
+    if city is None:
+        abort(404)
+    # if the body dictionary doesn’t contain the key user_id,
+    # raise a 400 error with a message
+    if 'user_id' not in body:
+        return (jsonify({'error': 'Missing user_id'}), 400)
+    # use the python method get to obtain the user_id from body dictionary
+    user_id = body.get('user_id')
+    # use our custom method get to
+    # retrieve the object based on the class and its ID, or None if not found
+    user = storage.get(User, user_id)
+    if user is None:
+        abort(404)
+    # If the body dictionary doesn’t contain the key name,
+    # raise a 400 error with a message
+    if 'name' not in body:
+        return (jsonify({'error': 'Missing name'}), 400)
+
+    # save the city_id and user_id in the body dictionary
+    body['city_id'] = city_id
+    body['user_id'] = user_id
+    # create a new instance of Place and pass body dictionary as **kwargs
+    obj = Place(**body)
+    storage.new(obj)
+    storage.save()
+    # return the new Place with the status code 201
+    return (jsonify(obj.to_dict()), 201)
