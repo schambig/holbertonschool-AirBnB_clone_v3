@@ -60,9 +60,9 @@ def post_user():
     obj = User(**body)
 
     if 'email' not in body:
-        return (jsonify({'error': 'Missing email'}), 400)
+        return (jsonify({'Missing email'}), 400)
     if 'password' not in body:
-        return (jsonify({'error': 'Missing password'}), 400)
+        return (jsonify({'Missing password'}), 400)
     else:
         storage.new(obj)
         storage.save()
