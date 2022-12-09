@@ -36,3 +36,18 @@ def return_place_id(place_id):
     if place is None:
         abort(404)
     return jsonify(place.to_dict())
+
+
+@app_view.route('/places/<place_id>', methods=['DELETE'],
+                strict_slashes=False)
+def delete_place_id(place_id):
+    ''' Delete a Place object using its id, ise DELETE http method '''
+    # retrieve the object based on the class and its ID, or None if not found
+    place = storage.get(Place, place_id)
+    if place is None:
+        abort(404)
+    else:
+        storage.delete(place)
+        storage.save()
+        # return an empty dictionary with the status code 200
+        return (jsonify({}), 200)
