@@ -38,7 +38,7 @@ def return_place_id(place_id):
     return jsonify(place.to_dict())
 
 
-@app_view.route('/places/<place_id>', methods=['DELETE'],
+@app_views.route('/places/<place_id>', methods=['DELETE'],
                 strict_slashes=False)
 def delete_place_id(place_id):
     ''' Delete a Place object using its id, ise DELETE http method '''
