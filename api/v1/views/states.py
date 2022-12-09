@@ -11,7 +11,7 @@ from flask import jsonify, abort, request
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def return_states():
-    ''' Retrieves the list of all State objects, use GET method '''
+    ''' Retrieves the list of all State objects, use GET http method '''
     # save all the objects in State class from database
     states = storage.all(State)
     states_list = []
@@ -22,7 +22,7 @@ def return_states():
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def return_states_id(state_id):
-    ''' Retrieve a State object using a specific id '''
+    ''' Retrieve a State object using a specific id, use GET http method '''
     # save all the objects in State class from database
     states = storage.all(State)
     for key, value in states.items():
@@ -37,7 +37,7 @@ def return_states_id(state_id):
 @app_views.route('/states/<state_id>', methods=['DELETE'],
                  strict_slashes=False)
 def delete_states_id(state_id):
-    ''' Delete a State object using a specific id'''
+    ''' Delete a State object using a specific id, use DELETE http method '''
     # save the object with the specific id from database
     state = storage.get(State, state_id)
     if state is None:
@@ -51,7 +51,7 @@ def delete_states_id(state_id):
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def post_state():
-    ''' Create a State object '''
+    ''' Create a State object, use POST http method '''
     # transform the HTTP body request to a python dictionary
     body = request.get_json()
     if body is None:
@@ -69,7 +69,7 @@ def post_state():
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def update_states_id(state_id):
-    ''' Update a State object '''
+    ''' Update a State object, use PUT http method '''
     body = request.get_json()
     if body is None:
         return (jsonify({'error': 'Not a JSON'}), 400)
