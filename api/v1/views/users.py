@@ -51,7 +51,7 @@ def delete_users_id(user_id):
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
 def post_user():
-    ''' Create a State object, use POST http method '''
+    ''' Create a user object, use POST http method '''
     # transform the HTTP body request to a python dictionary
     body = request.get_json()
     if body is None:
@@ -60,9 +60,9 @@ def post_user():
     obj = User(**body)
 
     if 'email' not in body:
-        return (jsonify({'Missing email'}), 400)
+        return (jsonify({'error': 'Missing email'}), 400)
     if 'password' not in body:
-        return (jsonify({'Missing password'}), 400)
+        return (jsonify({'error': 'Missing password'}), 400)
     else:
         storage.new(obj)
         storage.save()
