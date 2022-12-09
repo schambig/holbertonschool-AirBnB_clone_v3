@@ -37,3 +37,18 @@ def return_review_id(review_id):
     if review is None:
         abort(404)
     return jsonify(review.to_dict())
+
+
+@app_views.route('/reviews/<review_id>', methods=['DELETE'],
+                 strict_slashes=False)
+def delete_review_id(review_id):
+    ''' Delete a Review object using its id, ise DELETE http method '''
+    # retrieve the object based on the class and its ID, or None if not found
+    review = storage.get(Review, review_id)
+    if review is None:
+        abort(404)
+    else:
+        storage.delete(review)
+        storage.save()
+        # return an empty dictionary with the status code 200
+        return (jsonify({}), 200)
