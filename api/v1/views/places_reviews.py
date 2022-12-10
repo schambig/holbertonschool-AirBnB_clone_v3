@@ -91,3 +91,25 @@ def post_review(place_id):
     storage.save()
     # return the new Review with the status code 201
     return (jsonify(obj.to_dict()), 201)
+
+
+@app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
+def update_review_id(review_id):
+    ''' Update a Review object using its id, use PUT http method '''
+    # transform the HTTP body request to a python dictionary
+    body = request.get_json()
+    if body is None:
+        return (jsonify({'error': 'Not a JSON'}), 400)
+    # retrieve the object based on the class and its ID, or None if not found
+    review = storage.get(Review, review_id)
+    if review is None:
+        abort(404)
+    else:
+        ignore_key = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
+        for key, value in body.items():
+            if key not in ignore_key:
+                setattr(review, key, value)
+            else:
+                pass
+        storage.save()
+        return (jsonify(review.to_dict()), 200)
